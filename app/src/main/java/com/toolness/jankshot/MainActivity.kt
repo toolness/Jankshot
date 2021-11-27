@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.util.Size
+import android.view.Surface
 import android.widget.Toast
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
@@ -24,6 +25,7 @@ class MainActivity : AppCompatActivity() {
     private var imageCapture: ImageCapture? = null
     private lateinit var binding: ActivityMainBinding
     private lateinit var cameraExecutor: ExecutorService
+    private var rotation: Int = Surface.ROTATION_0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -42,6 +44,11 @@ class MainActivity : AppCompatActivity() {
         binding.takePhoto.setOnClickListener {
             takePhoto()
         }
+
+        binding.cameraRotation.setOnClickListener {
+            rotate()
+        }
+        updateRotationButton()
     }
 
     override fun onDestroy() {
@@ -62,6 +69,28 @@ class MainActivity : AppCompatActivity() {
                 Toast.makeText(this, "Jankshot needs the camera, yo.", Toast.LENGTH_SHORT).show()
                 finish()
             }
+        }
+    }
+
+    private fun rotate() {
+        if (rotation == Surface.ROTATION_0) {
+            rotation = Surface.ROTATION_90
+        } else if (rotation == Surface.ROTATION_90) {
+            rotation = Surface.ROTATION_180
+        } else if (rotation == Surface.ROTATION_180) {
+            rotation = Surface.ROTATION_270
+        } else {
+            rotation = Surface.ROTATION_0
+        }
+        updateRotationButton()
+    }
+
+    private fun updateRotationButton() {
+        binding.cameraRotation.text = when (rotation) {
+            Surface.ROTATION_90 -> "▶"
+            Surface.ROTATION_180 -> "▼"
+            Surface.ROTATION_270 -> "◀"
+            else -> "▲"
         }
     }
 
@@ -100,6 +129,7 @@ class MainActivity : AppCompatActivity() {
 
     private fun takePhoto() {
         val imageCapture = imageCapture ?: return
+        imageCapture.targetRotation = rotation
         val resolver = applicationContext.contentResolver
         val collection = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
         val imageDetails = ContentValues().apply {
