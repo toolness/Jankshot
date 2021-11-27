@@ -3,6 +3,7 @@ package com.toolness.jankshot
 import android.Manifest
 import android.content.ContentValues
 import android.content.pm.PackageManager
+import android.icu.text.SimpleDateFormat
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
@@ -18,6 +19,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.toolness.jankshot.databinding.ActivityMainBinding
+import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -132,8 +134,9 @@ class MainActivity : AppCompatActivity() {
         imageCapture.targetRotation = rotation
         val resolver = applicationContext.contentResolver
         val collection = MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        val timestamp = SimpleDateFormat(TIMESTAMP_FORMAT, Locale.US).format(System.currentTimeMillis())
         val imageDetails = ContentValues().apply {
-            put(MediaStore.Images.Media.DISPLAY_NAME, "jankshot.jpg")
+            put(MediaStore.Images.Media.DISPLAY_NAME, "jankshot-${timestamp}.jpg")
         }
         val outputOptions = ImageCapture.OutputFileOptions.Builder(
             resolver, collection, imageDetails
@@ -153,6 +156,7 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "Jankshot"
+        private const val TIMESTAMP_FORMAT = "yyyy-MM-dd-HH-mm-ss-SSS"
         private const val REQUEST_CODE_PERMISSIONS = 10
         private val REQUIRED_PERMISSIONS = arrayOf(Manifest.permission.CAMERA)
     }
