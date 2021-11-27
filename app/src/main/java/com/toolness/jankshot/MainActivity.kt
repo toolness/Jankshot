@@ -126,7 +126,6 @@ class MainActivity : AppCompatActivity() {
                 Log.e(TAG, "Use case binding failed", exc)
             }
         }, ContextCompat.getMainExecutor(this))
-        Toast.makeText(this, "Jankshot is starting!", Toast.LENGTH_SHORT).show()
     }
 
     private fun takePhoto() {
