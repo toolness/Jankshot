@@ -141,15 +141,20 @@ class MainActivity : AppCompatActivity() {
         val outputOptions = ImageCapture.OutputFileOptions.Builder(
             resolver, collection, imageDetails
         ).build()
+        binding.takePhoto.isEnabled = false
+        val startTime = System.currentTimeMillis()
         imageCapture.takePicture(outputOptions, ContextCompat.getMainExecutor(this), object : ImageCapture.OnImageSavedCallback {
             override fun onError(exc: ImageCaptureException) {
                 Log.e(TAG, "Photo capture failed: ${exc.message}")
+                binding.takePhoto.isEnabled = true
             }
 
             override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                val msg = "Photo capture succeeded: ${output.savedUri}"
+                val elapsedTime = System.currentTimeMillis() - startTime
+                val msg = "Took picture in $elapsedTime ms."
                 Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
                 Log.d(TAG, msg)
+                binding.takePhoto.isEnabled = true
             }
         })
     }
