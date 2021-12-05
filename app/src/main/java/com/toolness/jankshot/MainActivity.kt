@@ -1,6 +1,7 @@
 package com.toolness.jankshot
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.ContentValues
 import android.content.Context
 import android.content.pm.PackageManager
@@ -10,6 +11,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.util.Log
 import android.util.Size
+import android.view.MotionEvent
 import android.view.Surface
 import android.widget.Toast
 import androidx.camera.core.CameraSelector
@@ -23,13 +25,17 @@ import com.toolness.jankshot.databinding.ActivityMainBinding
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import kotlin.math.absoluteValue
 
 class MainActivity : AppCompatActivity() {
     private var imageCapture: ImageCapture? = null
     private lateinit var binding: ActivityMainBinding
     private lateinit var cameraExecutor: ExecutorService
     private var rotation: Int = Surface.ROTATION_0
+    private var rotStartPressX = 0
+    private var rotStartPressY = 0
 
+    @SuppressLint("ClickableViewAccessibility")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -49,8 +55,32 @@ class MainActivity : AppCompatActivity() {
             takePhoto()
         }
 
-        binding.cameraRotation.setOnClickListener {
-            rotate()
+        binding.cameraRotation.setOnTouchListener { _, event ->
+            when (event.action) {
+                MotionEvent.ACTION_DOWN -> {
+                    rotStartPressX = event.x.toInt()
+                    rotStartPressY = event.y.toInt()
+                }
+                else -> {
+                    val moveX = event.x.toInt() - rotStartPressX
+                    val moveY = event.y.toInt() - rotStartPressY
+                    if (moveY.absoluteValue >= moveX.absoluteValue) {
+                        if (moveY <= 0) {
+                            rotation = Surface.ROTATION_0
+                        } else {
+                            rotation = Surface.ROTATION_180
+                        }
+                    } else {
+                        if (moveX <= 0) {
+                            rotation = Surface.ROTATION_270
+                        } else {
+                            rotation = Surface.ROTATION_90
+                        }
+                    }
+                    updateRotationButton()
+                }
+            }
+            true
         }
         updateRotationButton()
     }
@@ -74,19 +104,6 @@ class MainActivity : AppCompatActivity() {
                 finish()
             }
         }
-    }
-
-    private fun rotate() {
-        if (rotation == Surface.ROTATION_0) {
-            rotation = Surface.ROTATION_90
-        } else if (rotation == Surface.ROTATION_90) {
-            rotation = Surface.ROTATION_180
-        } else if (rotation == Surface.ROTATION_180) {
-            rotation = Surface.ROTATION_270
-        } else {
-            rotation = Surface.ROTATION_0
-        }
-        updateRotationButton()
     }
 
     private fun updateRotationButton() {
