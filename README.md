@@ -4,7 +4,7 @@ I, Atul Varma, don't usually need the 12 terapixel photos that my cell phone is 
 
 Most of the time, I just see a funny sign on the street and want to send it to a buddy. Yet doing this with the default camera app captures it at full 12 terapixel resolution, and sometimes it's even _sent_ at that resolution. And then 6 months later my phone and/or email account is bugging me because I've run out of space filling it with hundreds of 12 terapixel photos, and I don't want to have to sift through them all to delete the ones that are just funny signs.
 
-So Jankshot is an app that takes a photo like it's a digital camera from 1997.  It's janky, but it's also like a 100k JPEG or something, my phone can store billions of them. Perfect for snapping a pic of a funny sign--but if you want to take a masterpiece that can fit on a billboard, use a different camera app.
+So Jankshot is an app that takes a photo like it's a digital camera from 1997.  It's janky, but it's also like a 100k JPEG or something, my phone can store billions of them. Perfect for snapping a pic of a funny sign--but if you want to take a masterpiece that can fit on a billboard, use a different app.
 
 ## Quick start
 
